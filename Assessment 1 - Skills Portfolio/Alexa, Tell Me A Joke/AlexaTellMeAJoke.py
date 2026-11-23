@@ -12,19 +12,19 @@ ttf_path = BASE_DIR / "fonts" / "AmazonEmber_Bd.ttf"
 
 ctypes.windll.gdi32.AddFontResourceExW(str(ttf_path), 0x10, 0) #load the bundles font just for this running app on windows
 
-def play_sound(): #play background music on a loop
-    pygame.mixer.init()
-    pygame.mixer.music.load(str(BASE_DIR / "bgmusic.mp3"))
-    pygame.mixer.music.set_volume(0.5)
-    pygame.mixer.music.play(loops=-1)
-
-play_sound()
-
 root = tk.Tk()
 root.geometry("500x600")
 root.configure(bg="#000000") #black #232F3E #FFFFFF other blue #88ced8 other blue #c0f9ec
 root.title("Say 'Alexa, Tell Me A Joke!'")
 root.iconbitmap('alexa.ico')
+
+def playsound(): #play background music on a loop
+    pygame.mixer.init()
+    pygame.mixer.music.load(str(BASE_DIR / "bgmusic.mp3"))
+    pygame.mixer.music.set_volume(0.2)
+    pygame.mixer.music.play(loops=-1)
+
+playsound()
 
 #main label
 label1 = tk.Label(
