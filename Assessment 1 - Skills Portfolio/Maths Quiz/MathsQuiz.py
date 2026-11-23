@@ -6,7 +6,7 @@ from PIL import ImageTk, Image
 import pygame
 
 BASE_DIR = Path(__file__).resolve().parent
-ttf_path = BASE_DIR / "TheBattleCont.ttf"
+ttf_path = BASE_DIR / "Graffiti City.otf"
 
 ctypes.windll.gdi32.AddFontResourceExW(str(ttf_path), 0x10, 0)
 
@@ -16,14 +16,14 @@ root.configure(bg="#f2ede1") #green #afd014 orange #fd6d03
 root.title("The Hardest Quiz Ever™")
 root.iconbitmap('maths.ico')
 
-bgpil = Image.open(BASE_DIR / "bgbg.gif")
+bgpil = Image.open(BASE_DIR / "bgimg.png")
 bg = ImageTk.PhotoImage(bgpil)
 
 bglbl = tk.Label(root, image=bg)
 bglbl.place(x=0, y=0, relwidth=1, relheight=1)
 bglbl.image = bg
 
-FONTFAMILY = "The Battle Continuez"
+FONTFAMILY = "Graffiti City"
 
 DIFFICULTYLEVELS = {
     "easy": (1,9),
@@ -175,7 +175,7 @@ menuframe = tk.Frame(root, bg="#f2ede1")
 lbl1 = tk.Label(
     menuframe,
     text="The Hardest Quiz Ever",
-    font=("The Battle Continuez", 40),
+    font=(FONTFAMILY, 40),
     bg="#f2ede1",
     fg="#afd014",
     wraplength=390,
@@ -185,7 +185,7 @@ lbl1.pack(pady=(16, 10))
 btn1 = tk.Button(
     menuframe,
     text="Start Quiz",
-    font=("The Battle Continuez", 25),
+    font=(FONTFAMILY, 25),
     bg="#afd014",
     fg="#f2ede1",
     width=14,
@@ -196,7 +196,7 @@ btn1.pack(pady=7)
 btn2 = tk.Button(
     menuframe,
     text="Instructions",
-    font=("The Battle Continuez", 25),
+    font=(FONTFAMILY, 25),
     bg="#afd014",
     fg="#f2ede1",
     width=14,
@@ -207,7 +207,7 @@ btn2.pack(pady=7)
 btn3 = tk.Button(
     menuframe,
     text="Credits",
-    font=("The Battle Continuez", 25),
+    font=(FONTFAMILY, 25),
     bg="#afd014",
     fg="#f2ede1",
     width=14,
@@ -218,7 +218,7 @@ btn3.pack(pady=7)
 lblfooter = tk.Label(
     menuframe,
     text="2026 Fatima Ilyas",
-    font=("The Battle Continuez", 14),
+    font=(FONTFAMILY, 14),
     bg="#f2ede1",
     fg="#fd6d03",
 )
@@ -229,7 +229,7 @@ quizframe = tk.Frame(root, bg="#f2ede1")
 lbl2 = tk.Label(
     quizframe,
     text="Select Difficulty",
-    font=("The Battle Continuez", 40),
+    font=(FONTFAMILY, 40),
     bg="#f2ede1",
     fg="#afd014",
 )
@@ -239,7 +239,7 @@ for label, level in [("Easy", "easy"), ("Moderate", "moderate"), ("Advanced", "a
     btn4 = tk.Button(
         quizframe,
         text=label,
-        font=("The Battle Continuez", 20),
+        font=(FONTFAMILY, 20),
         bg="#afd014",
         fg="#f2ede1",
         width=14,
@@ -250,7 +250,7 @@ for label, level in [("Easy", "easy"), ("Moderate", "moderate"), ("Advanced", "a
 btn5 = tk.Button(
     quizframe,
     text="Back to Menu",
-    font=("The Battle Continuez", 16),
+    font=(FONTFAMILY, 16),
     bg="#fd6d03",
     fg="#f2ede1",
     width=14,
@@ -399,7 +399,7 @@ instructionsframe = tk.Frame(root, bg="#f2ede1")
 lbl3 = tk.Label(
     instructionsframe,
     text="Instructions",
-    font=("The Battle Continuez", 28),
+    font=(FONTFAMILY, 28),
     bg="#f2ede1",
     fg="#afd014",
 )
@@ -413,7 +413,7 @@ lbl4 = tk.Label(
         "2nd Try Right: +5 points\n"
         "Max Score: 100 points\n"
     ),
-    font=("The Battle Continuez", 20),
+    font=(FONTFAMILY, 20),
     bg="#f2ede1",
     fg="#222222",
     justify="center",
@@ -423,7 +423,7 @@ lbl4.pack(pady=10)
 btn6 = tk.Button(
     instructionsframe,
     text="Back to Menu",
-    font=("The Battle Continuez", 16),
+    font=(FONTFAMILY, 16),
     bg="#fd6d03",
     fg="#f2ede1",
     command=lambda: switchframe(menuframe)
@@ -435,7 +435,7 @@ creditsframe = tk.Frame(root, bg="#f2ede1")
 lbl5 = tk.Label(
     creditsframe,
     text="Credits",
-    font=("The Battle Continuez", 28),
+    font=(FONTFAMILY, 28),
     bg="#f2ede1",
     fg="#afd014",
 )
@@ -444,7 +444,7 @@ lbl5.pack(pady=(30, 15))
 lbl6 = tk.Label(
     creditsframe,
     text="The Hardest Quiz Ever™\nBuilt with Python and Tkinter\nby Fatima Ilyas",
-    font=("The Battle Continuez", 20),
+    font=(FONTFAMILY, 20),
     bg="#f2ede1",
     fg="#222222",
     justify="center",
@@ -454,7 +454,7 @@ lbl6.pack(pady=10)
 btn7 = tk.Button(
     creditsframe,
     text="Back to Menu",
-    font=("The Battle Continuez", 16),
+    font=(FONTFAMILY, 16),
     bg="#fd6d03",
     fg="#f2ede1",
     command=lambda: switchframe(menuframe)
