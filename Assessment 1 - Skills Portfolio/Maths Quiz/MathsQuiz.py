@@ -67,7 +67,7 @@ def randomint(difficulty):
     return random.randint(low, high)
 
 def decideoperation():
-    operations = ["+", "-", "*", "/"]
+    operations = ["+", "-"]
     return random.choice(operations)
 
 def getrank(score):
@@ -135,7 +135,7 @@ def iscorrect(userans, correctans, attempt):
         state["advancing"] = True
         entryanswer.config(state="disabled")
         root.after(800, nextquestion)
-    return True
+        return True
 
     if attempt == 1:
         state["attempt"] = 2
@@ -243,6 +243,7 @@ for label, level in [("Easy", "easy"), ("Moderate", "moderate"), ("Advanced", "a
         bg="#afd014",
         fg="#f2ede1",
         width=14,
+        command=lambda lvl=level: startquiz(lvl)
     )
     btn4.pack(pady=6)
 
@@ -276,7 +277,7 @@ lblscore = tk.Label(
     text="Score 0",
     font=(FONTFAMILY, 16),
     bg="#fd6d03",
-    fg="#afdo14"
+    fg="#afd014"
 )
 lblscore.pack(side="right")
 
