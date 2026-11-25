@@ -26,7 +26,7 @@ def playsound():
     """Play background music on a loop."""
     pygame.mixer.init()
     pygame.mixer.music.load(str(Path(BASEDIR) / "bgms.mp3"))
-    pygame.mixer.music.set_volume(0.09)
+    pygame.mixer.music.set_volume(0)
     pygame.mixer.music.play(loops=-1)
 
 

@@ -109,10 +109,6 @@ def nextquestion():
         if state["op"] == "+"
         else state["num1"] - state["num2"]
         if state["op"] == "-"
-        else state["num1"] * state["num2"]
-        if state["op"] == "*"
-        else state["num1"] // state["num2"]
-        if state["op"] == "/"
         else 0
     )
     displayproblem()
