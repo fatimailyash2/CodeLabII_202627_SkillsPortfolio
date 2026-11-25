@@ -78,7 +78,7 @@ def getrank(score):
     elif score >= 50:
         return "Average"
     else:
-        return "Stupid"
+        return "Idiot"
 
 def displaymenu():
     state["advancing"] = False
@@ -356,7 +356,7 @@ lblresult.pack(pady=4)
 
 lblrank = tk.Label(
     resultsframe,
-    text="Rank: Stupid",
+    text="Rank: Idiot",
     font=(FONTFAMILY, 22),
     bg="#f2ede1",
     fg="#222222"
