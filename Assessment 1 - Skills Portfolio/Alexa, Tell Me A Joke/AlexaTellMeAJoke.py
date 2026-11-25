@@ -15,7 +15,7 @@ ctypes.windll.gdi32.AddFontResourceExW(str(ttf_path), 0x10, 0) #load the bundles
 root = tk.Tk()
 root.geometry("500x600")
 root.configure(bg="#000000") #black #232F3E #FFFFFF other blue #88ced8 other blue #c0f9ec
-root.title("Say 'Alexa, Tell Me A Joke!'")
+root.title("Amazon Alexa™")
 root.iconbitmap('alexa.ico')
 
 def playsound(): #play background music on a loop
@@ -29,7 +29,7 @@ playsound()
 #main label
 label1 = tk.Label(
     root, 
-    text="Say 'Hey Alexa, Tell Me A Joke!'", 
+    text="Alexa™", 
     font=("Amazon Ember", 20), 
     bg="#000000", 
     fg="white"
@@ -46,7 +46,7 @@ jokelabel = tk.Label(
 )
 jokelabel.pack(pady=15)
 
-gif_path = BASE_DIR / "giphy.gif"
+gif_path = BASE_DIR / "detroit.gif"
 gif_image = Image.open(gif_path)
 
 frames = []
