@@ -4,8 +4,6 @@ from pathlib import Path
 import tkinter as tk
 from PIL import ImageTk, Image
 from tkinter import ttk, messagebox, simpledialog
-import pygame
-
 
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 FILEPATH = os.path.join(BASEDIR, "studentMarks.txt")
@@ -20,17 +18,6 @@ if ttfpath.exists():
         pass
 
 FONTFAMILY = "Emirates"
-
-
-def playsound():
-    """Play background music on a loop."""
-    pygame.mixer.init()
-    pygame.mixer.music.load(str(Path(BASEDIR) / "bgms.mp3"))
-    pygame.mixer.music.set_volume(0)
-    pygame.mixer.music.play(loops=-1)
-
-
-playsound()
 
 DEFAULTMARKSDATA = (
     "10\n"
@@ -170,20 +157,20 @@ class StudentManagerApp:
 
         tk.Label(
             overlaycard,
-            text="Analyze marks, grades, rankings, and student records",
-            font=(FONTFAMILY, 10),
-            fg="#5A5265",
+            text="Analyze Better.",
+            font=(FONTFAMILY, 10, "bold"),
+            fg="#D71A21",
             bg="#FFFDF9",
         ).pack(pady=(0, 20))
 
         enterbtn = tk.Button(
             overlaycard,
-            text="Enter Student Manager",
+            text="Enter",
             command=self.openmainapp,
             font=(FONTFAMILY, 11, "bold"),
             bg="#D71A21",
             fg="#FFFDF9",
-            activebackground="#8752e3",
+            activebackground="#D2343A",
             activeforeground="#FFFDF9",
             bd=0,
             padx=24,
@@ -191,7 +178,7 @@ class StudentManagerApp:
             cursor="hand2",
         )
         enterbtn.pack()
-        enterbtn.bind("<Enter>", lambda e: enterbtn.configure(bg="#8752e3"))
+        enterbtn.bind("<Enter>", lambda e: enterbtn.configure(bg="#D2343A"))
         enterbtn.bind("<Leave>", lambda e: enterbtn.configure(bg="#D71A21"))
 
     def openmainapp(self):
@@ -299,7 +286,7 @@ class StudentManagerApp:
 
         style.map(
             "Hap.Treeview.Heading",
-            background=[("active", "#8752e3")],
+            background=[("active", "#D71A21")],
         )
 
     def setupui(self):
@@ -319,7 +306,7 @@ class StudentManagerApp:
             header,
             text="Student Marks (Out of 160)",
             font=(FONTFAMILY, 10),
-            fg="#5A5265",
+            fg="#D71A21",
             bg="#F3EDE2",
         )
         setlbl1.pack(side=tk.RIGHT)
@@ -339,15 +326,15 @@ class StudentManagerApp:
         menuframe.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 15))
 
         menuitems = [
-            ("1. View All Student Records", self.viewallrecords),
-            ("2. View Individual Student Record", self.viewindividualrecord),
-            ("3. Show Highest Total Score", self.showhighestscore),
-            ("4. Show Lowest Total Score", self.showlowestscore),
-            ("5. Sort Student Records", self.sortrecordsdialog),
-            ("6. Add a Student Record", self.addstudentdialog),
-            ("7. Delete a Student Record", self.deletestudentdialog),
-            ("8. Update a Student's Record", self.updatestudentdialog),
-            ("Home Screen", self.showstartscreen),
+            ("View All Student Records", self.viewallrecords),
+            ("View Individual Student Record", self.viewindividualrecord),
+            ("Show Highest Total Score", self.showhighestscore),
+            ("Show Lowest Total Score", self.showlowestscore),
+            ("Sort Student Records", self.sortrecordsdialog),
+            ("Add a Student Record", self.addstudentdialog),
+            ("Delete a Student Record", self.deletestudentdialog),
+            ("Update a Student's Record", self.updatestudentdialog),
+            ("Exit", self.showstartscreen),
         ]
 
         for label, action in menuitems:
@@ -374,7 +361,7 @@ class StudentManagerApp:
         rightpanel = tk.Frame(body, bg="#FAF7F2")
         rightpanel.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        self.sectiontitle = tk.StringVar(value="1. View All Student Records")
+        self.sectiontitle = tk.StringVar(value="View All Student Records")
         sst = tk.Label(
             rightpanel,
             textvariable=self.sectiontitle,
@@ -484,7 +471,7 @@ class StudentManagerApp:
         return partial[0] if len(partial) == 1 else None
 
     def viewallrecords(self):
-        self.sectiontitle.set("1. View All Student Records")
+        self.sectiontitle.set("View All Student Records")
         self.populatetable(self.students, includeclasssummary=True)
 
     def viewindividualrecord(self):
