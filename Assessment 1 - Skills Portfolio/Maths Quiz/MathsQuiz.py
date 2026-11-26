@@ -5,7 +5,7 @@ import random
 from PIL import ImageTk, Image
 import pygame
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent #gets the exact directory containing the main python script so relative assets work even if the script is launched from a different directory
 ttf_path = BASE_DIR / "Graffiti City.otf"
 
 ctypes.windll.gdi32.AddFontResourceExW(str(ttf_path), 0x10, 0)
@@ -16,12 +16,12 @@ root.configure(bg="#f2ede1") #green #afd014 orange #fd6d03
 root.title("The Hardest Quiz Ever™")
 root.iconbitmap('maths.ico')
 
-bgpil = Image.open(BASE_DIR / "bgimg.png")
+bgpil = Image.open(BASE_DIR / "bgimg.png") #sets the background image using Pillow
 bg = ImageTk.PhotoImage(bgpil)
 
 bglbl = tk.Label(root, image=bg)
-bglbl.place(x=0, y=0, relwidth=1, relheight=1)
-bglbl.image = bg
+bglbl.place(x=0, y=0, relwidth=1, relheight=1) #since theres no way to add an image as a background using Tkinter, a label containing the image inside it is used
+bglbl.image = bg #keeps an explicit python reference on the widget so garbage collection doesnt drop the image and leave a blank label
 
 FONTFAMILY = "Graffiti City"
 
@@ -31,9 +31,9 @@ DIFFICULTYLEVELS = {
     "advanced":(1000,9999)
 }
 
-TOTALQUESTIONS = 10
+TOTALQUESTIONS = 10 #storing number bounds in difficulty levels and round length in totalquestions avoids magic numbers scattered across functions and makes tuning difficulty or round length easy 
 
-state = {
+state = { #instead of separate global variables for every piece of game data, state groups the currenr round's variables into one dictionary
     "difficulty": "easy",
     "questionnum": 0,
     "score": 0,
@@ -54,19 +54,19 @@ def playsound(): #play background music on a loop
 playsound()
 
 def switchframe(frame):
-    frame.tkraise()
+    frame.tkraise() #lifts that frame to the top of the stacking order in root without destroyiong or recreating widgets
 
 FRAME_W = 430
 FRAME_H = 410
 
-def placecentered(frame):
+def placecentered(frame): #positions every framer at the center of root
     frame.place(relx=0.5, rely=0.5, anchor="center", width=FRAME_W, height=FRAME_H)
 
 def randomint(difficulty):
-    low, high = DIFFICULTYLEVELS[difficulty]
+    low, high = DIFFICULTYLEVELS[difficulty] #unpacks "(low, high)" from DIFFICULTYLEVELS and returns a random integer inclusive of both ends via "random.randint(low,high)"
     return random.randint(low, high)
 
-def decideoperation():
+def decideoperation(): #chooses an operator
     operations = ["+", "-"]
     return random.choice(operations)
 
@@ -84,7 +84,7 @@ def displaymenu():
     state["advancing"] = False
     switchframe(menuframe)
 
-def startquiz(level):
+def startquiz(level): #resets questionnum and score to 0, sets difficulty=level, and advancing=false, raises gameplayframe, and calls nextquestion()
     state["difficulty"] = level
     state["questionnum"] = 0
     state["score"] = 0
@@ -96,7 +96,7 @@ def nextquestion():
     state["advancing"] = False
     state["questionnum"] += 1
 
-    if state["questionnum"] > TOTALQUESTIONS:
+    if state["questionnum"] > TOTALQUESTIONS: 
         displayresults(state["score"])
         return
 
@@ -145,13 +145,13 @@ def iscorrect(userans, correctans, attempt):
 
     return False
 
-def submitans(event=None):
-    if state["advancing"]:
+def submitans(event=None): #event=none allows the same function to be triggered both by clicking the check button and by pressing enter
+    if state["advancing"]: #blocks extra submissions while waiting to move to the next question
         return
 
-    raw = entryanswer.get().strip()
+    raw = entryanswer.get().strip() #reads the entry box and removes leading or trailing spaces
     try:
-        userans = int(raw)
+        userans = int(raw) #converts it to an integer, if the input is empty or non number, valueerror is caught
     except ValueError:
         lblfeedback.config(text="Please enter a valid integer.", fg="#fd6d03")
         entryanswer.focus_set()
