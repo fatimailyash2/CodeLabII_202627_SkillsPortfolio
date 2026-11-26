@@ -12,14 +12,14 @@ FILEPATH = os.path.join(BASEDIR, "studentMarks.txt")
 ICONPATH = os.path.join(BASEDIR, "hap.ico")
 GIFPATH = os.path.join(BASEDIR, "bgg.gif")
 
-ttfpath = Path(BASEDIR) / "MeganCloudyPersonalUseOnly.ttf"
+ttfpath = Path(BASEDIR) / "Emirates-Bold.ttf"
 if ttfpath.exists():
     try:
         ctypes.windll.gdi32.AddFontResourceExW(str(ttfpath), 0x10, 0)
     except Exception:
         pass
 
-FONTFAMILY = "Megan Cloudy"
+FONTFAMILY = "Emirates"
 
 
 def playsound():
@@ -156,7 +156,7 @@ class StudentManagerApp:
             overlaycard,
             text="Hap™",
             font=(FONTFAMILY, 28, "bold"),
-            fg="#9f6cf3",
+            fg="#D71A21",
             bg="#FFFDF9",
         ).pack()
 
@@ -181,7 +181,7 @@ class StudentManagerApp:
             text="Enter Student Manager",
             command=self.openmainapp,
             font=(FONTFAMILY, 11, "bold"),
-            bg="#9f6cf3",
+            bg="#D71A21",
             fg="#FFFDF9",
             activebackground="#8752e3",
             activeforeground="#FFFDF9",
@@ -192,7 +192,7 @@ class StudentManagerApp:
         )
         enterbtn.pack()
         enterbtn.bind("<Enter>", lambda e: enterbtn.configure(bg="#8752e3"))
-        enterbtn.bind("<Leave>", lambda e: enterbtn.configure(bg="#9f6cf3"))
+        enterbtn.bind("<Leave>", lambda e: enterbtn.configure(bg="#D71A21"))
 
     def openmainapp(self):
         self.stopgifanimation()
@@ -285,7 +285,7 @@ class StudentManagerApp:
 
         style.configure(
             "Hap.Treeview.Heading",
-            background="#9f6cf3",
+            background="#D71A21",
             foreground="#FFFDF9",
             relief="flat",
             font=(FONTFAMILY, 10, "bold"),
@@ -293,7 +293,7 @@ class StudentManagerApp:
 
         style.map(
             "Hap.Treeview",
-            background=[("selected", "#9f6cf3")],
+            background=[("selected", "#D71A21")],
             foreground=[("selected", "#FFFDF9")],
         )
 
@@ -310,14 +310,14 @@ class StudentManagerApp:
             header,
             text="Hap™ | Student Manager",
             font=(FONTFAMILY, 15, "bold"),
-            fg="#9f6cf3",
+            fg="#D71A21",
             bg="#F3EDE2",
         )
         setlbl.pack(side=tk.LEFT)
 
         setlbl1 = tk.Label(
             header,
-            text="studentMarks.txt (Out of 160)",
+            text="Student Marks (Out of 160)",
             font=(FONTFAMILY, 10),
             fg="#5A5265",
             bg="#F3EDE2",
@@ -331,7 +331,7 @@ class StudentManagerApp:
             body,
             text=" Menu ",
             font=(FONTFAMILY, 10, "bold"),
-            fg="#9f6cf3",
+            fg="#D71A21",
             bg="#F3EDE2",
             padx=10,
             pady=10,
@@ -360,7 +360,7 @@ class StudentManagerApp:
                 font=(FONTFAMILY, 10),
                 bg="#FFFDF9",
                 fg="#1F1B24",
-                activebackground="#9f6cf3",
+                activebackground="#D71A21",
                 activeforeground="#FFFDF9",
                 bd=0,
                 padx=10,
@@ -368,7 +368,7 @@ class StudentManagerApp:
                 cursor="hand2",
             )
             btn.pack(pady=4)
-            btn.bind("<Enter>", lambda e, b=btn: b.configure(bg="#9f6cf3", fg="#FFFDF9"))
+            btn.bind("<Enter>", lambda e, b=btn: b.configure(bg="#D71A21", fg="#FFFDF9"))
             btn.bind("<Leave>", lambda e, b=btn: b.configure(bg="#FFFDF9", fg="#1F1B24"))
 
         rightpanel = tk.Frame(body, bg="#FAF7F2")
@@ -418,7 +418,7 @@ class StudentManagerApp:
             rightpanel,
             text=" Summary ",
             font=(FONTFAMILY, 10, "bold"),
-            fg="#9f6cf3",
+            fg="#D71A21",
             bg="#F3EDE2",
             padx=12,
             pady=10,
@@ -430,7 +430,7 @@ class StudentManagerApp:
             summarybox,
             textvariable=self.summaryvar,
             font=(FONTFAMILY, 10),
-            fg="#1F1B24",
+            fg="#D71A21",
             bg="#F3EDE2",
             anchor="w",
             justify=tk.LEFT,
@@ -583,7 +583,7 @@ class StudentManagerApp:
             win,
             text="Sort Records",
             command=applysort,
-            bg="#9f6cf3",
+            bg="#D71A21",
             fg="#FFFDF9",
             font=(FONTFAMILY, 10),
             bd=0,
@@ -661,7 +661,7 @@ class StudentManagerApp:
             win,
             text="Save Record",
             command=submitstudent,
-            bg="#9f6cf3",
+            bg="#D71A21",
             fg="#FFFDF9",
             font=(FONTFAMILY, 10),
             bd=0,
@@ -726,7 +726,7 @@ class StudentManagerApp:
             win,
             text=f"Editing #{student['code']}",
             bg="#FAF7F2",
-            fg="#9f6cf3",
+            fg="#D71A21",
             font=(FONTFAMILY, 10, "bold"),
         ).grid(row=0, column=0, columnspan=2, pady=(12, 6))
 
@@ -789,7 +789,7 @@ class StudentManagerApp:
             win,
             text="Update Record",
             command=savechanges,
-            bg="#9f6cf3",
+            bg="#D71A21",
             fg="#FFFDF9",
             font=(FONTFAMILY, 10),
             bd=0,
