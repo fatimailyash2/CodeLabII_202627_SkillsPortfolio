@@ -14,12 +14,12 @@ ttfpath = Path(BASEDIR) / "Emirates-Bold.ttf"
 if ttfpath.exists():
     try:
         ctypes.windll.gdi32.AddFontResourceExW(str(ttfpath), 0x10, 0)
-    except Exception:
-        pass
+    except Exception: #0x10 tells windows gdi to register the font privately for this available
+        pass #if font unavailable, this prevents a crash of the gui and falls back to system font
 
 FONTFAMILY = "Emirates"
 
-DEFAULTMARKSDATA = (
+DEFAULTMARKSDATA = ( #exists to replace studentmarks.txt if it goes missing
     "10\n"
     "1345,John Curry,8,15,7,45\n"
     "2345,Sam Sturtivant,14,15,14,77\n"
@@ -48,59 +48,59 @@ class StudentManagerApp:
                 pass
 
         self.students = []
-        self.ensuredatafile()
+        self.ensuredatafile() #checks if the studentmarks.txt file exists, if not it takes data from the defaultmarksdata dictionary
         self.loadsdata()
 
-        self.gifframes = []
-        self.gifphoto = None
-        self.gifindex = 0
-        self.gifjob = None
+        self.gifframes = [] #initializes gif animation
+        self.gifphoto = None #keeps a python reference to the currently displayed photoimage
+        self.gifindex = 0 #current frame index
+        self.gifjob = None #stores the id stored by selfrootafter so stopgifanimation can cancel it later
 
         self.setupstyles()
         self.showstartscreen()
 
-    def stopgifanimation(self):
+    def stopgifanimation(self): #cancels pending scheduled animation frames when reentering showstartscreen or transitioning to openmainapp
         if self.gifjob is not None:
             try:
-                self.root.after_cancel(self.gifjob)
+                self.root.after_cancel(self.gifjob) #resets selfgifjob to none to prevent stale cancellations or overlapping roots
             except Exception:
                 pass
             self.gifjob = None
 
-    def loadgifframes(self, width, height):
+    def loadgifframes(self, width, height): #clears any previously loaded frames first so memory doesnt pile up on resizing
         self.gifframes.clear()
         if not os.path.exists(GIFPATH):
             return False
         try:
-            with Image.open(GIFPATH) as gif:
-                framecount = getattr(gif, "n_frames", 1)
+            with Image.open(GIFPATH) as gif: #opens the gif
+                framecount = getattr(gif, "n_frames", 1) #finds total frames
                 for idx in range(framecount):
-                    gif.seek(idx)
-                    resized = gif.convert("RGBA").resize(
-                        (max(width, 1), max(height, 1)),
+                    gif.seek(idx) #seeks to each frame
+                    resized = gif.convert("RGBA").resize( #converts to rgba
+                        (max(width, 1), max(height, 1)), #resizes to match the canvas' dimensions
                         Image.Resampling.LANCZOS,
                     )
-                    self.gifframes.append(ImageTk.PhotoImage(resized))
+                    self.gifframes.append(ImageTk.PhotoImage(resized)) #saves each frame as a tkinter photoimage
             return len(self.gifframes) > 0
         except Exception:
-            self.gifframes.clear()
+            self.gifframes.clear() #if the file is missing or unreadable, returning false lets the start screen render cleanly on its colored canvas
             return False
 
     def animatebg(self, canvas, bgimageid, delay=60):
-        if not self.gifframes or not canvas.winfo_exists():
+        if not self.gifframes or not canvas.winfo_exists(): #checks if the canvas hasnt been destroyed
             return
-        self.gifindex = (self.gifindex + 1) % len(self.gifframes)
+        self.gifindex = (self.gifindex + 1) % len(self.gifframes) #wraps smoothly from the last frame back to the initial frame
         self.gifphoto = self.gifframes[self.gifindex]
-        canvas.itemconfig(bgimageid, image=self.gifphoto)
-        self.gifjob = self.root.after(delay, lambda: self.animatebg(canvas, bgimageid, delay))
+        canvas.itemconfig(bgimageid, image=self.gifphoto) #updates the existing canvas image rather than creating new ones for every frame 
+        self.gifjob = self.root.after(delay, lambda: self.animatebg(canvas, bgimageid, delay)) #schedules next frame after delay of 60 milliseconds
 
-    def showstartscreen(self):
+    def showstartscreen(self): #destroys previous widgets in selfroot
         self.stopgifanimation()
-        for widget in self.root.winfo_children():
+        for widget in self.root.winfo_children(): 
             widget.destroy()
 
         self.root.update_idletasks()
-        winw = self.root.winfo_width() if self.root.winfo_width() > 1 else 980
+        winw = self.root.winfo_width() if self.root.winfo_width() > 1 else 980 
         winh = self.root.winfo_height() if self.root.winfo_height() > 1 else 620
 
         startcanvas = tk.Canvas(
@@ -123,7 +123,7 @@ class StudentManagerApp:
         def onresize(event):
             if event.widget is startcanvas and (event.width > 1 and event.height > 1):
                 if self.loadgifframes(event.width, event.height) and bgimageid is not None:
-                    self.gifindex = 0
+                    self.gifindex = 0 #checks width and height, loads gif frames, places centered overlaycard, connects enter button to openmainapp
                     self.gifphoto = self.gifframes[0]
                     startcanvas.itemconfig(bgimageid, image=self.gifphoto)
 
@@ -181,42 +181,39 @@ class StudentManagerApp:
         enterbtn.bind("<Enter>", lambda e: enterbtn.configure(bg="#D2343A"))
         enterbtn.bind("<Leave>", lambda e: enterbtn.configure(bg="#D71A21"))
 
-    def openmainapp(self):
+    def openmainapp(self): #when main app opens stop the gif at the homepage and destroy all widgets in the homepage
         self.stopgifanimation()
         for widget in self.root.winfo_children():
             widget.destroy()
         self.setupui()
         self.viewallrecords()
 
-    def ensuredatafile(self):
-        """Creates studentMarks.txt in the same folder using the dataset in case it is missing."""
+    def ensuredatafile(self): #creates studentMarks.txt in the same folder using the dataset in case it is missing
         if not os.path.exists(FILEPATH):
             with open(FILEPATH, "w", encoding="utf-8") as f:
                 f.write(DEFAULTMARKSDATA)
 
-    def loadsdata(self):
-        """Loads student records from studentMarks.txt."""
-        self.students.clear()
+    def loadsdata(self): #loads student records from studentMarks.txt
+        self.students.clear() #resets the list before loading so reloading doesnt duplicate entries
         try:
             with open(FILEPATH, "r", encoding="utf-8") as f:
-                lines = [line.strip() for line in f if line.strip()]
+                lines = [line.strip() for line in f if line.strip()] #strips whitespaces and new lines and filters out blank lines
 
-            if not lines:
+            if not lines: #prevents indexerror if the file is completely empty
                 return
 
-            for line in lines[1:]:
-                parts = [p.strip() for p in line.split(",")]
-                if len(parts) == 6:
+            for line in lines[1:]: #skips the first line which is the student count header
+                parts = [p.strip() for p in line.split(",")] #splits the data at the commas
+                if len(parts) == 6: #reflects the actual number of valid records
                     code = int(parts[0])
                     name = parts[1]
                     c1, c2, c3 = int(parts[2]), int(parts[3]), int(parts[4])
                     exam = int(parts[5])
-                    self.students.append(self.buildstudentdict(code, name, c1, c2, c3, exam))
+                    self.students.append(self.buildstudentdict(code, name, c1, c2, c3, exam)) #if file reading fails fall back to dictionary
         except Exception as e:
-            messagebox.showerror("File Error", f"Could not load studentMarks.txt:\n{e}")
+            messagebox.showerror("File Error", f"Could not load studentMarks.txt:\n{e}") #catches error and displays error message
 
-    def savedata(self):
-        """Saves updated count and student records back to studentMarks.txt."""
+    def savedata(self): #saves updated count and student records back to studentMarks.txt
         try:
             with open(FILEPATH, "w", encoding="utf-8") as f:
                 f.write(f"{len(self.students)}\n")
@@ -225,9 +222,8 @@ class StudentManagerApp:
         except Exception as e:
             messagebox.showerror("Save Error", f"Could not save studentMarks.txt:\n{e}")
 
-    @staticmethod
-    def buildstudentdict(code, name, c1, c2, c3, exam):
-        """Calculates coursework total (/60), overall score (/160), percentage, and grade."""
+    @staticmethod #because it foes not need self or class state, it is a pure calculation and dictionary builder
+    def buildstudentdict(code, name, c1, c2, c3, exam): #calculates coursework total (/60), overall score (/160), percentage, and grade
         cwtotal = c1 + c2 + c3
         overallscore = cwtotal + exam
         percentage = (overallscore / 160.0) * 100.0
@@ -427,7 +423,7 @@ class StudentManagerApp:
     def populatetable(self, records, includeclasssummary=False):
         for item in self.tree.get_children():
             self.tree.delete(item)
-
+#clears existing rows in selftree before inserting records so every view mode reuses the same table widget
         for s in records:
             self.tree.insert(
                 "",
@@ -437,41 +433,41 @@ class StudentManagerApp:
                     s["code"],
                     f"{s['cwtotal']} / 60",
                     f"{s['exam']} / 100",
-                    f"{s['percentage']:.2f}%",
+                    f"{s['percentage']:.2f}%", #percentage to 2 decimal places
                     s["grade"],
                 ),
             )
 
-        if includeclasssummary:
+        if includeclasssummary: #overall summary for all students
             count = len(records)
             avgpct = sum(s["percentage"] for s in records) / count if count else 0.0
             self.summaryvar.set(
                 f"Students in Class: {count}    |    Average Percentage Mark: {avgpct:.2f}%"
             )
-        elif len(records) == 1:
+        elif len(records) == 1: #summary for individual student record
             s = records[0]
             self.summaryvar.set(
-                f"{s['name']} (#{s['code']})  —  "
+                f"{s['name']} (#{s['code']}) - "
                 f"Coursework Breakdown: {s['c1']}/20, {s['c2']}/20, {s['c3']}/20  |  "
                 f"Total Score: {s['overallscore']}/160 ({s['percentage']:.2f}%)"
             )
-        else:
+        else: #when no student is selected
             self.summaryvar.set("No matching student records.")
 
     def findstudent(self, query):
-        q = query.strip()
+        q = query.strip() #strips whietrspace
         if not q:
             return None
 
         for s in self.students:
-            if str(s["code"]) == q or s["name"].lower() == q.lower():
+            if str(s["code"]) == q or s["name"].lower() == q.lower(): #case insensitive full name
                 return s
 
         partial = [s for s in self.students if q.lower() in s["name"].lower()]
         return partial[0] if len(partial) == 1 else None
 
     def viewallrecords(self):
-        self.sectiontitle.set("View All Student Records")
+        self.sectiontitle.set("All Student Records")
         self.populatetable(self.students, includeclasssummary=True)
 
     def viewindividualrecord(self):
@@ -484,12 +480,12 @@ class StudentManagerApp:
             "Enter Student Name or Student Number (1000-9999):",
             parent=self.root,
         )
-        if query is None:
+        if query is None: #if cancel is selected or prompt is closed exit the method
             return
 
         student = self.findstudent(query)
         if student:
-            self.sectiontitle.set(f"2. Individual Record — {student['name']}")
+            self.sectiontitle.set(f"Record for {student['name']}")
             self.populatetable([student], includeclasssummary=False)
         else:
             messagebox.showwarning("Not Found", f"No unique student found for '{query}'.")
@@ -500,7 +496,7 @@ class StudentManagerApp:
             return
 
         topstudent = max(self.students, key=lambda s: s["overallscore"])
-        self.sectiontitle.set("3. Show Highest Total Score")
+        self.sectiontitle.set("Highest Total Score")
         self.populatetable([topstudent], includeclasssummary=False)
 
     def showlowestscore(self):
@@ -509,7 +505,7 @@ class StudentManagerApp:
             return
 
         lowstudent = min(self.students, key=lambda s: s["overallscore"])
-        self.sectiontitle.set("4. Show Lowest Total Score")
+        self.sectiontitle.set("Lowest Total Score")
         self.populatetable([lowstudent], includeclasssummary=False)
 
     def sortrecordsdialog(self):
@@ -522,7 +518,7 @@ class StudentManagerApp:
         win.geometry("320x210")
         win.configure(bg="#FAF7F2")
         win.resizable(False, False)
-        win.grab_set()
+        win.grab_set() #blocks interaction with main window until this dialog is closed
 
         tk.Label(
             win,
@@ -562,7 +558,7 @@ class StudentManagerApp:
                 key=lambda s: s[keyname].lower() if isinstance(s[keyname], str) else s[keyname],
                 reverse=reverse,
             )
-            self.sectiontitle.set(f"5. Sort Student Records ({keyname.capitalize()} - {ordervar.get()})")
+            self.sectiontitle.set(f"Sorted Student Records ({keyname.capitalize()} - {ordervar.get()})")
             self.populatetable(sortedrecords, includeclasssummary=True)
             win.destroy()
 
@@ -579,7 +575,7 @@ class StudentManagerApp:
             cursor="hand2",
         ).pack(pady=18)
 
-    def addstudentdialog(self):
+    def addstudentdialog(self): #form to add a new studnet
         win = tk.Toplevel(self.root)
         win.title("Add a Student Record")
         win.geometry("350x330")
@@ -786,7 +782,7 @@ class StudentManagerApp:
         ).grid(row=6, column=0, columnspan=2, pady=14)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": #only runs when executed directly as the main script and not if import by another script
     root = tk.Tk()
     app = StudentManagerApp(root)
     root.mainloop()
