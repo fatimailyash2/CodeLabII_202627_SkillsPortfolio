@@ -1,6 +1,7 @@
 import ctypes
 from pathlib import Path
 import tkinter as tk
+from tkinter import messagebox
 import random
 from PIL import ImageTk, Image
 import pygame
@@ -135,7 +136,8 @@ def iscorrect(userans, correctans, attempt):
 
     if attempt == 1:
         state["attempt"] = 2
-        lblfeedback.config(text="Incorrect! Try again. (+5 points)", fg="#fd6d03")
+        messagebox.showwarning("Try Again!","Incorrect! Try again. (-5 points)")
+        lblfeedback.config(text="") #avoids showing the same message twice once the user closes the popup
         entryanswer.delete(0, tk.END)
     else:
         lblfeedback.config(text=f"Incorrect! The correct answer was {correctans}.", fg="#fd6d03")
@@ -404,10 +406,12 @@ lbl3.pack(pady=(20, 10))
 lbl4 = tk.Label(
     instructionsframe,
     text=(
-        "10 Arithmethic Questions per Round. \n"
+        "10 Arithmethic Questions per Round\n"
         "1st Try Right: +10 points\n"
         "2nd Try Right: +5 points\n"
         "Max Score: 100 points\n"
+        "2 Attempts per Question\n"
+        "Lose 5 points for Every Attempt\n"
     ),
     font=(FONTFAMILY, 20),
     bg="#f2ede1",

@@ -86,7 +86,7 @@ def telljoke():
     speakjokes(currentsetup) #speaks the joke through text to speech
 
     if currentpunchline:
-        punchlinebutton.config(text="What?", state="normal")
+        punchlinebutton.config(text="View Punchline!", state="normal")
     else:
         punchlinebutton.config(text="No Punchline :(", state="disabled")
 
