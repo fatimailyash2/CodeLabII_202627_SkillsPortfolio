@@ -114,7 +114,7 @@ gifbutton.pack(pady=10)
 
 punchlinebutton = tk.Button(
     root,
-    text="What?",
+    text="",
     command=revealpunchline,
     font=("Amazon Ember", 13),
     bg="#232F3E",
